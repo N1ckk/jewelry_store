@@ -1,0 +1,7 @@
+﻿/* Стили для мобильных устройств */
+@media screen and (max-width: 768px) {
+    /* Уменьшаем отступы и размеры для элементов при разрешении до 768px */
+    .filter-item {
+        padding: 5px 8px;
+        font-size: 12px;
+    }

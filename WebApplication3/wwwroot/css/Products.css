@@ -1,0 +1,37 @@
+﻿/* Стили для мобильных устройств */
+@media screen and (max-width: 768px) {
+    .product-item {
+        width: 100%; /* Ширина товара на мобильных устройствах */
+        margin-bottom: 20px; /* Отступ между товарами */
+    }
+
+    .product-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px; /* Отступы между товарами */
+    }
+
+    .filter-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .filter-item {
+        padding: 8px 12px;
+        margin: 0 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #sortOrder {
+        width: 100%;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+}

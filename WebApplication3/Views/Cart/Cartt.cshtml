@@ -1,0 +1,136 @@
+﻿@model WebApplication3.Models.Cart
+@{
+    ViewData["Title"] = "Кошик";
+}
+
+<div class="container">
+    <div class="row">
+        @if (Model.items_id.Any())
+        {
+            <div class="col-md-6">
+                <h1>Оформлення замовлення</h1>
+                <div class="order-form rounded">
+                    <h4 style="margin-bottom:15px">Ваші дані</h4>
+                    <form asp-action="Checkout" asp-controller="Cart" method="post">
+                        <label for="firstName">Ім'я</label>
+                        <input type="text" style="margin-bottom:15px" class="form-control" id="firstName" name="firstName" placeholder="Ваше ім'я" required>
+                        <!-- Другие поля ввода для данных пользователя -->
+                        <label for="lastName">Прізвище</label>
+                        <input type="text" style="margin-bottom:15px" class="form-control" id="lastName" name="lastName" placeholder="Ваше прізвище" required>
+
+                        <label for="fatherName">По батькові</label>
+                        <input type="text" style="margin-bottom:15px" class="form-control" id="fatherName" name="fatherName" placeholder="Ваше прізвище" required>
+
+                        <label for="phone">Телефон</label>
+                        <input type="tel" style="margin-bottom:15px" class="form-control" id="phone" name="phone" placeholder="Номер телефону" required oninput="validatePhoneNumber()" />
+
+                        <label for="address">Адрес</label>
+                        <input type="text" style="margin-bottom:25px" class="form-control" id="address" name="address" placeholder="Ваша адреса" required>
+
+                       
+                        @for (int i = 0; i < Model.products.Count; i++)
+                        {
+                            <input type="hidden" name="cartItems[@i].p_id" value="@Model.products[i].p_id" />
+                            <input type="hidden" name="cartItems[@i].pd_size" value="@Model.productDetailsList[i].pd_size" />
+                            <input type="hidden" name="cartItems[@i].pd_price" value="@Model.productDetailsList[i].pd_price" />
+                            <!-- Другие скрытые поля для каждого товара в корзине -->
+                        }
+
+                        <button class="btn btn-primary mt-3" style="margin-bottom:25px" type="submit">Замовити</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h1>Кошик</h1>
+                <div class="cart-details rounded">
+                    <!-- Здесь разместите информацию о товарах в корзине -->
+                    <div class="card-deck">
+                        @for (int i = 0; i < Model.products.Count; i++)
+                        {
+                            <div class="card mb-4 rounded">
+                                <img src="@Model.products[i].p_path" class="card-img-top" style="width: 15%; height: 15%;" />
+                                <div class="card-body">
+                                    <h5 class="card-title">@Model.products[i].p_name</h5>
+                                    @if (i < Model.productDetailsList.Count && Model.productDetailsList[i].pd_size != 0)
+                                    {
+                                        <h6 class="card-title">Розмір: @Model.productDetailsList[i].pd_size</h6>
+                                    }
+                                    <p class="card-text">Ціна: @Model.productDetailsList[i].pd_price грн</p>
+                                    <div class="d-flex align-items-center">
+                                        <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
+                                            <input type="hidden" name="productId" value="@Model.products[i].p_id" />
+                                            <button class="btn btn-danger ml-4" type="submit">Видалити</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="mt-4">
+                        <h4>Загальна сума:</h4>
+                        <p>Сума товарів: @Model.TotalSum грн</p>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-md-12" style="display: flex; flex-direction: column; align-items: flex-start;">
+                <h1 style="margin: 0 0 10px 0;">Кошик</h1>
+                <p style="margin: 0;">Кошик порожній</p>
+            </div>
+
+        }
+    </div>
+</div>
+
+<script>
+    function validatePhoneNumber() {
+        var phoneInput = document.getElementById("phone");
+        var phonePattern = /^(?:\+380\d{9}|0\d{9})$/;
+
+        if (!phonePattern.test(phoneInput.value)) {
+            phoneInput.setCustomValidity("Введите номер телефона в формате +380x или 0xxx");
+        } else {
+            phoneInput.setCustomValidity('');
+        }
+    }
+</script>
+
+<style>
+    /* Стили для блоков оформления заказа и корзины */
+    .order-form {
+        padding: 20px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
+
+    .cart-details {
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    /* Дополнительные стили для текстовых полей и отступов */
+    .form-group {
+        border-radius: 10px;
+        padding: 15px;
+        border: 1px solid #ccc;
+    }
+
+        /* Отступы между текстовыми полями */
+        .form-group:not(:last-child) {
+            margin-bottom: 20px;
+        }
+
+    /* Стили для текста "Кошик пустой" */
+    .col-md-12 {
+        text-align: center;
+        font-size: 18px;
+    }
+</style>

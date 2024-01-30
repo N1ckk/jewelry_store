@@ -1,0 +1,11 @@
+﻿/* Медиа-запрос для размеров экранов меньше 768px (для мобильных устройств) */
+@media screen and (max-width: 768px) {
+    table {
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+}

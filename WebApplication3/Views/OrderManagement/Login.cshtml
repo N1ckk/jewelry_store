@@ -1,0 +1,16 @@
+﻿<!-- Login.cshtml -->
+@{
+    ViewData["Title"] = "Авторизація";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;min-width: 175vh;">
+    <form class="text-center p-4 shadow bg-light" asp-controller="OrderManagement" asp-action="Login" method="post" style="max-width: 300px;">
+        <div class="mb-3">
+            <input type="text" class="form-control" name="username" placeholder="Введіть ім'я користувача">
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" name="password" placeholder="Введіть пароль">
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Увійти</button>
+    </form>
+</div>

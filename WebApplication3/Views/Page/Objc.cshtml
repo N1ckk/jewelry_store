@@ -1,0 +1,145 @@
+﻿@model Product
+@{
+    ViewData["Title"] = Model.p_name;
+    bool disableSizeSelection = (bool)ViewData["DisableSizeSelection"];
+    int productPrice = (int)ViewData["ProductPrice"];
+    double productWeight = (double)ViewData["ProductWeight"];
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/Obj.css">
+    <title>@ViewData["Title"]</title>
+    <style>
+        .size-button {
+            width: 70px; /* Фиксированная ширина */
+            height: 30px; /* Фиксированная высота */
+            padding: 5px 15px; /* Уменьшил внутренний отступ */
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 25px; /* Более овальная форма */
+            cursor: pointer;
+            display: flex;
+            align-items: center; /* Центрируем содержимое по вертикали */
+            justify-content: center; /* Центрируем содержимое по горизонтали */
+        }
+
+            .size-button.selected {
+                background-color: #4CAF50;
+                color: white;
+            }
+    </style>
+
+
+
+</head>
+<body>
+
+    <div style="display: flex; flex-direction: column;">
+        <h1 style="margin-bottom: 20px;">@Model.p_name</h1>
+        <div style="display: flex; flex-wrap: wrap;">
+            <div style="margin-right: 40px;">
+                <img class="image-container" style="width: 400px; height: 400px; margin-bottom: 20px;" src="@Model.p_path" alt="@Model.p_name" width="100%">
+            </div>
+            <div style="display: flex; flex-direction: column; margin-top: 10px;">
+                <div style="display: flex;">
+                    <div style="margin-right: 20px;">
+                        <p style="margin-bottom: 8px;"><strong>Матеріал та проба:</strong> @Model.p_material, @Model.p_sample</p>
+                        <p id="weightPlaceholder" style="margin-bottom: 15px;"><strong>Вага:</strong></p>
+                    </div>
+                </div >
+                @if (!disableSizeSelection)
+                {
+                    <p style="margin-bottom: 5px;">Обрано розмір</p>
+                    <div id="sizesButtons" style="display: flex; flex-wrap: wrap; margin-bottom: -10px;">
+                        @foreach (var productDetail in Model.ProductDetails)
+                        {
+                            <button class="size-button" style="margin-bottom: 15px;" data-size-id="@productDetail.pd_id" onclick="selectSize('@productDetail.pd_id', this)">@productDetail.pd_size</button>
+                        }
+                    </div>
+
+                }
+                <h3 id="pricePlaceholder" style="margin-top: 10px;">Ціна - @productPrice грн</h3>
+                <form id="addToCartForm" asp-action="AddToCart" asp-controller="Cart" method="post">
+                    <input type="hidden" name="productId" value="@Model.p_id" />
+                    <input type="hidden" name="selectedSizeId" id="selectedSizeId" />
+                    <button class="buy-button" type="submit" onclick="return validateSizeSelection()" style="margin-top: 10px;">Купити</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var firstSizeButton = document.querySelector('.size-button');
+            if (firstSizeButton) {
+                var firstSizeId = firstSizeButton.getAttribute('data-size-id');
+                firstSizeButton.classList.add('selected');
+                document.getElementById('selectedSizeId').value = firstSizeId;
+
+                fetch('/Page/GetPrice?pId=' + '@Model.p_id' + '&pdId=' + firstSizeId)
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('pricePlaceholder').textContent = 'Ціна - ' + data + ' грн';
+                    });
+
+                updateWeight(firstSizeId); // Вызываем функцию обновления веса при загрузке страницы
+            } else {
+                fetchWeight(); // Вызываем функцию получения веса при загрузке страницы, если блок размера отсутствует
+                updateWeight('0'); // Обновляем вес для товаров без блока выбора размера
+            }
+        });
+
+        function selectSize(sizeId, button) {
+            var buttons = document.getElementsByClassName('size-button');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('selected');
+            }
+            button.classList.add('selected');
+
+            document.getElementById('selectedSizeId').value = sizeId;
+
+            fetch('/Page/GetPrice?pId=' + '@Model.p_id' + '&pdId=' + sizeId)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('pricePlaceholder').textContent = 'Ціна - ' + data + ' грн';
+                });
+
+            updateWeight(sizeId); // Вызываем функцию обновления веса при выборе размера
+        }
+
+        function fetchWeight() {
+            fetch('/Page/GetWeight?pId=' + '@Model.p_id' + '&pdId=0')
+                .then(response => response.text())
+                .then(data => {
+                    const weightPlaceholder = document.getElementById('weightPlaceholder');
+                    weightPlaceholder.innerHTML = '<strong>Вага:</strong> ' + (data ? data : '@productWeight');
+                });
+        }
+
+        function updateWeight(sizeId) {
+            fetch('/Page/GetWeight?pId=' + '@Model.p_id' + '&pdId=' + sizeId)
+                .then(response => response.text())
+                .then(data => {
+                    const weightPlaceholder = document.getElementById('weightPlaceholder');
+                    weightPlaceholder.innerHTML = '<strong>Вага:</strong> ' + (data ? data : '@productWeight');
+                });
+        }
+
+
+        function validateSizeSelection() {
+            var selectedSizeId = document.getElementById('selectedSizeId').value;
+
+            if (selectedSizeId === "" && !@Model.ProductDetails.Any(p => p.pd_size == 0)) {
+                alert('Виберіть розмір');
+                return false;
+            } else {
+                document.getElementById('addToCartForm').submit();
+                return true;
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+﻿@model List<Product>
+@{
+    var categoryName = ViewBag.CategoryName as string; // получаем название категории
+    ViewData["Title"] = categoryName;
+}
+<link rel="stylesheet" type="text/css" href="/css/Products.css">
+
+<h1>@categoryName</h1>
+
+<div class="filter-container">
+    <div class="filter-item @(ViewData["SelectedSex"] as string == null ? "active" : "")" onclick="filterBySex('')">Всі</div>
+    <div class="filter-item @(ViewData["SelectedSex"] as string == "чоловічий" ? "active" : "")" onclick="filterBySex('чоловічий')">Чоловічі</div>
+    <div class="filter-item @(ViewData["SelectedSex"] as string == "жіночий" ? "active" : "")" onclick="filterBySex('жіночий')">Жіночі</div>
+    <div class="filter-item @(ViewData["SelectedSex"] as string == "дитячий" ? "active" : "")" onclick="filterBySex('дитячий')">Дитячі</div>
+</div>
+<select style="margin-bottom:20px; border-radius: 5px; padding: 5px 10px; border: 1px solid #ccc; font-size: 13px;" name="sortOrder" id="sortOrder">
+    <option value="">Обрати варіант сортування</option>
+    <option value="name_desc" selected ="@(ViewData["NameSortParm"] as string == "name_desc" ? "selected" : "")">Назва: від Я до А</option>
+    <option value="name_asc" selected = "@(ViewData["NameSortParm"] as string == "name_asc" ? "selected" : "")">Назва: від А до Я</option>
+    <option value="price_desc" selected = "@(ViewData["PriceSortParm"] as string == "price_desc" ? "selected" : "")">Ціна: від більшої до меншої</option>
+    <option value="price_asc" selected = "@(ViewData["PriceSortParm"] as string == "price_asc" ? "selected" : "")">Ціна: від меншої до більшої</option>
+</select>
+
+<div class="product-grid">
+    @foreach (var product in Model)
+    {
+        <div class="product-item">
+            <a href="@Url.Action("Objc", "Page", new { id = product.p_id })">
+                <img src="@product.p_path" alt="@product.p_name" width="100%">
+                <p>@product.p_name</p>
+                @if (product.ProductDetails.Any())
+                {
+                    <h3>Ціна - @product.ProductDetails.First().pd_price</h3>
+                }
+                <p class="buy-button">Купити</p>
+            </a>
+        </div>
+    }
+</div>
+<script>
+    function filterBySex(sex) {
+        var currentUrl = window.location.href;
+        var url = new URL(currentUrl);
+        url.searchParams.set('sex', sex);
+        window.location.href = url.href;
+    }
+
+    window.onload = function () {
+        var sortOrder = localStorage.getItem('sortOrder');
+        var select = document.getElementById('sortOrder');
+
+        if (sortOrder) {
+            select.value = sortOrder;
+        } else {
+            select.value = '';
+            localStorage.setItem('sortOrder', '');
+        }
+
+        var currentUrl = window.location.href;
+        var url = new URL(currentUrl);
+        if (select.value === '') {
+            url.searchParams.delete('sortOrder');
+        } else {
+            url.searchParams.set('sortOrder', select.value);
+        }
+        history.replaceState({}, '', url.href);
+    };
+
+    document.getElementById('sortOrder').onchange = function () {
+        var selectedSortOrder = this.value;
+        localStorage.setItem('sortOrder', selectedSortOrder);
+
+        setTimeout(function () {
+            var currentUrl = window.location.href;
+            var url = new URL(currentUrl);
+            if (selectedSortOrder === '') {
+                url.searchParams.delete('sortOrder');
+            } else {
+                url.searchParams.set('sortOrder', selectedSortOrder);
+            }
+            window.location.href = url.href;
+        }, 200);
+
+        this.blur();
+    };
+</script>

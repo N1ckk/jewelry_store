@@ -1,0 +1,11 @@
+﻿@if (ViewBag.Categories != null)
+{
+    <ul class="menu">
+        @foreach (var category in ViewBag.Categories)
+        {
+            <li>
+                <a href="@Url.Action("Products", "Product", new { categoryId = category.ca_id })">@category.ca_name</a>
+            </li>
+        }
+    </ul>
+}

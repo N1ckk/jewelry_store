@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="lua">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Діамантова Стежка</title>
+    <link rel="icon" href="/Images/dazzling-diamond-blue-on-blue-shining-bokeh-background-concept-for-chossing-best-diamond-gem-design_167862-3034 копия2.png" type="image/png">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApplication3.styles.css" asp-append-version="true" />
+    <style>
+        #cartCounter {
+            display: none;
+            position: absolute;
+            top: 3px;
+            right: 33px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+            #cartCounter span {
+                font-weight: bold;
+            }
+
+        #cartText {
+            position: relative;
+            top: -3px;
+            margin-left: 7px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Product" asp-action="Catalog" style="display: flex; align-items: center;">
+                    <img src="/Images/dazzling-diamond-blue-on-blue-shining-bokeh-background-concept-for-chossing-best-diamond-gem-design_167862-3034 копия2.png" style="width:30px; margin-right: 5px; margin-top: 3px;" />
+                    Діамантова Стежка
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Payment">Оплата і доставка</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contacts">Контакти</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ml-auto me-5">
+                        <a class="nav-link text-dark d-flex justify-content-between align-items-center" asp-area="" asp-controller="Cart" asp-action="Cartt">
+                            <div class="d-flex align-items-center">
+                                <img src="/Images/imgonline-com-ua-Resize-VWkGXNu0XyLteXA.png" alt="Кошик" style="height: 24px; width: 24px;" class="me-1">
+                                <span id="cartText">Кошик</span>
+                            </div>
+                            <div id="cartCounter">
+                                @if (ViewBag.CartItemCount != null)
+                                {
+                                    <span>@ViewBag.CartItemCount</span>
+                                }
+                                else
+                                {
+                                    <span>0</span>
+                                }
+                            </div>
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <nav style="margin-top: -15px;">
+            @if (ViewBag.Categories != null)
+            {
+                <div class="menu">
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <a style="color: black; text-decoration: none; border-bottom: 1px solid #ccc; margin-bottom:30px" href="@Url.Action("Products", "Product", new { categoryId = category.ca_id })" class="menu-item">@category.ca_name</a>
+                    }
+                </div>
+            }
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - Діамантова Cтежка <a asp-area="" asp-controller="Product" asp-action="Catalog"></a>
+            <a class="text-muted" style="margin-left: 50px" asp-area="" asp-controller="Home" asp-action="Payment">Оплата і доставка</a>
+        </div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        // JavaScript для обновления количества товаров в корзине без перезагрузки страницы
+        function updateCartItemCount() {
+            $.ajax({
+                url: '/Cart/CartItemCount',
+                method: 'GET',
+                success: function (data) {
+                    if (data > 0) {
+                        $('#cartCounter').html('<span>' + data + '</span>').show();
+                    } else {
+                        $('#cartCounter').hide();
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        // Вызов функции после загрузки страницы
+        $(document).ready(function () {
+            updateCartItemCount(); // Вызываем функцию для обновления количества товаров в корзине
+        });
+    </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

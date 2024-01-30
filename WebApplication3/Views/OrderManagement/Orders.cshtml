@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Інформація про замовлення";
+}
+
+<h1 style="margin-bottom: 25px">Управління замовленнями</h1>
+<link rel="stylesheet" type="text/css" href="/css/Orders.css">
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Номер замовлення</th>
+                <th>Ім'я клієнта</th>
+                <th>Прізвище клієнта</th>
+                <th>По батькові</th>
+                <th>Номер телефона</th>
+                <th>Адреса</th>
+                <th>Назва виробу</th>
+                <th>Розмір</th>
+                <th>Ціна</th>
+                <th>Гендер</th>
+                <th>Дата замовлення</th>
+                <th>Оплата</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderId</td>
+                    <td>@order.ClientName</td>
+                    <td>@order.ClientSurname</td>
+                    <td>@order.ClientFName</td>
+                    <td>@order.ClientPhoneNumber</td>
+                    <td>@order.ClientAddress</td>
+                    <td>@order.ProductName</td>
+                    <td>@order.ProductSize</td>
+                    <td>@order.ProductPrice</td>
+                    <td>@order.ProductSex</td>
+                    <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                    <td>@order.OrderStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
