@@ -1,6 +1,11 @@
 <p align="center">
   <img src="https://i.ibb.co/vdnXWpw/rounded-in-photoretrica.png" alt="Project Logo" width="500">
 </p>
+<p align="center">
+  <img src="https://img.shields.io/badge/Engine-.NET%208-blueviolet" alt="Engine">
+  <img src="https://img.shields.io/badge/Version-v1.0%20(Alpha)-blue" alt="Project Version">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+</p>
 
 ## Description
 
