@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://ibb.co/44psrjk" alt="Project Logo" width="726">
+  <img src="https://i.ibb.co/h2VXzK0/2024-02-09-220329.png" alt="Project Logo" width="726">
 </p>
 
 # Online jewelry store
