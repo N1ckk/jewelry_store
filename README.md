@@ -2,8 +2,6 @@
   <img src="https://i.ibb.co/vdnXWpw/rounded-in-photoretrica.png" alt="Project Logo" width="500">
 </p>
 
-# Online jewelry store
-
 ## Description
 
 The Online Jewelry Store project aims to create a web-based platform for selling jewelry items online. It utilizes various technologies including C#, MySQL, CSS, HTML, JavaScript, Bootstrap, Entity Framework, and ASP.NET Core MVC.
